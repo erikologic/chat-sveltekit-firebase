@@ -38,3 +38,10 @@ if (USE_EMULATOR_FIRESTORE) {
 	db.useEmulator('localhost', 8080);
 }
 db.enablePersistence({ synchronizeTabs: true }).catch(console.error);
+
+import 'firebase/compat/storage';
+export const storage = firebase.storage();
+const USE_EMULATOR_STORAGE = true; // TODO
+if (USE_EMULATOR_STORAGE) {
+	storage.useEmulator('localhost', 9199);
+}

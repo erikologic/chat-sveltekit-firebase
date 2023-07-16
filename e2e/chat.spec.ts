@@ -66,6 +66,7 @@ test('share pics with another browser', async ({ page: alicePage, browser }, tes
 	const bobPage = await browser.newContext().then((c) => c.newPage());
 	const bobEmail = testInfoToEmail(testInfo.title + '_bob');
 	await signupAndLogin(bobPage, bobEmail);
+	await bobPage.getByRole('link', { name: 'Chat' }).click();
 	await expect(bobPage.getByRole('heading', { name: 'Chat' })).toBeVisible();
 
 	// when Alice sends a message with a picture...

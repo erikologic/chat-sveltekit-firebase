@@ -1,7 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/firebase';
-	import { signInWithEmailAndPassword } from 'firebase/auth';
+	import {
+		GoogleAuthProvider,
+		getAuth,
+		signInWithEmailAndPassword,
+		signInWithPopup
+	} from 'firebase/auth';
 
 	let errorMessage: string;
 
@@ -22,6 +27,13 @@
 				if (err?.code) errorMessage = 'Invalid email or password'; // TODO improve this error message
 			});
 	}
+
+	const googleAuthProvider = new GoogleAuthProvider();
+	function handleContinueWithGoogle(event: Event) {
+		signInWithPopup(getAuth(), googleAuthProvider).then(async () => {
+			goto('/').catch(console.error);
+		});
+	}
 </script>
 
 <h1>Login</h1>
@@ -36,3 +48,5 @@
 {#if errorMessage}
 	<output>{errorMessage}</output>
 {/if}
+
+<button type="button" on:click={handleContinueWithGoogle}>Sign in with Google</button>
