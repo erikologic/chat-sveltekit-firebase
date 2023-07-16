@@ -7,7 +7,8 @@ test.beforeEach(async ({ page }, testInfo) => {
 	await testInfo.attach('email', { body: myEmail });
 
 	await signupAndLogin(page, myEmail);
-
+	
+	await page.getByRole('link', { name: 'Chat' }).click();
 	await expect(page.getByRole('heading', { name: 'Chat' })).toBeVisible();
 });
 
@@ -19,7 +20,7 @@ test.afterEach(async ({ page }, testInfo) => {
 	await deleteUser(myEmail);
 });
 
-test('chat', async ({ page }) => {
+test('chat by myself', async ({ page }) => {
 	// send a message
 	const message = 'Hello world: ' + getRandomChars();
 	await page.getByPlaceholder('Message').fill(message);
