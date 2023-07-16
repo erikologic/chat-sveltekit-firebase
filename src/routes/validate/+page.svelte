@@ -1,0 +1,1 @@
+<h1>Validate email</h1>

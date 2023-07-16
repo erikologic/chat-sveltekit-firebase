@@ -1,7 +1,7 @@
 import { defineConfig, devices, PlaywrightTestConfig } from '@playwright/test';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config({ path: './.env.e2e' });
+import dotenv from 'dotenv';
+dotenv.config({ path: './.env.e2e' });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -15,7 +15,7 @@ let config: PlaywrightTestConfig = {
 		 * Maximum time expect() should wait for the condition to be met.
 		 * For example in `await expect(locator).toHaveText();`
 		 */
-		timeout: 5000,
+		timeout: 5000
 	},
 	/* Run tests in files in parallel */
 	fullyParallel: true,
@@ -36,15 +36,15 @@ let config: PlaywrightTestConfig = {
 
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 		// trace: 'on-first-retry',
-		trace: 'on',
+		trace: 'on'
 	},
 
 	/* Configure projects for major browsers */
 	projects: [
 		{
 			name: 'chromium',
-			use: { ...devices['Desktop Chrome'] },
-		},
+			use: { ...devices['Desktop Chrome'] }
+		}
 		// {
 		//   name: 'firefox',
 		//   use: { ...devices['Desktop Firefox'] },
@@ -81,14 +81,14 @@ let config: PlaywrightTestConfig = {
 		{
 			command: 'npm run dev',
 			port: 3000,
-			reuseExistingServer: true,
+			reuseExistingServer: true
 		},
 		{
 			command: 'npm run firebase:start',
 			port: 4000,
-			reuseExistingServer: true,
-		},
-	],
+			reuseExistingServer: true
+		}
+	]
 };
 
 if (process.env.CI === 'true') {
@@ -97,7 +97,7 @@ if (process.env.CI === 'true') {
 		forbidOnly: !!process.env.CI,
 		retries: 2,
 		reporter: 'html',
-		workers: 2,
+		workers: 2
 	};
 }
 
@@ -106,9 +106,9 @@ if (process.env.SMOKE_TEST === 'true') {
 		...config,
 		use: {
 			...config.use,
-			baseURL: 'https://nextjs13-template-vercel.vercel.app/',
+			baseURL: 'https://nextjs13-template-vercel.vercel.app/'
 		},
-		webServer: undefined,
+		webServer: undefined
 	};
 } else {
 	process.env.FIREBASE_AUTH_EMULATOR_HOST = '127.0.0.1:9099';
