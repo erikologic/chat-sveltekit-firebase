@@ -1,5 +1,6 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 import { connectAuthEmulator } from 'firebase/auth';
 import {
 	PUBLIC_FIREBASE_API_KEY,
@@ -30,3 +31,10 @@ if (USE_EMULATOR) {
 		disableWarnings: true
 	});
 }
+
+export const db = firebase.firestore();
+const USE_EMULATOR_FIRESTORE = true; // TODO
+if (USE_EMULATOR_FIRESTORE) {
+	db.useEmulator('localhost', 8080);
+}
+db.enablePersistence({ synchronizeTabs: true }).catch(console.error);

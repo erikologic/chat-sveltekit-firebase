@@ -7,16 +7,14 @@ test.beforeEach(async ({ page }, testInfo) => {
 	await testInfo.attach('email', { body: myEmail });
 
 	await signupAndLogin(page, myEmail);
-	
+
 	await page.getByRole('link', { name: 'Chat' }).click();
 	await expect(page.getByRole('heading', { name: 'Chat' })).toBeVisible();
 });
 
 test.afterEach(async ({ page }, testInfo) => {
 	await page.close();
-	const myEmail = testInfo.attachments
-		.find(({ name }) => name === 'email')
-		.body.toString();
+	const myEmail = testInfo.attachments.find(({ name }) => name === 'email').body.toString();
 	await deleteUser(myEmail);
 });
 
@@ -34,14 +32,12 @@ test('chat by myself', async ({ page }) => {
 	await expect(page.getByText(secondMessage)).toBeVisible();
 });
 
-test('chat with another browser', async ({
-	page: alicePage,
-	browser,
-}, testInfo) => {
+test('chat with another browser', async ({ page: alicePage, browser }, testInfo) => {
 	// log in Bob
-	const bobPage = await browser.newContext().then(c => c.newPage());
+	const bobPage = await browser.newContext().then((c) => c.newPage());
 	const bobEmail = testInfoToEmail(testInfo.title + '_bob');
 	await signupAndLogin(bobPage, bobEmail);
+	await bobPage.getByRole('link', { name: 'Chat' }).click();
 	await expect(bobPage.getByRole('heading', { name: 'Chat' })).toBeVisible();
 
 	// when Alice sends a message...
@@ -65,12 +61,9 @@ test('chat with another browser', async ({
 	await deleteUser(bobEmail);
 });
 
-test('share pics with another browser', async ({
-	page: alicePage,
-	browser,
-}, testInfo) => {
+test('share pics with another browser', async ({ page: alicePage, browser }, testInfo) => {
 	// log in Bob
-	const bobPage = await browser.newContext().then(c => c.newPage());
+	const bobPage = await browser.newContext().then((c) => c.newPage());
 	const bobEmail = testInfoToEmail(testInfo.title + '_bob');
 	await signupAndLogin(bobPage, bobEmail);
 	await expect(bobPage.getByRole('heading', { name: 'Chat' })).toBeVisible();
@@ -78,35 +71,27 @@ test('share pics with another browser', async ({
 	// when Alice sends a message with a picture...
 	const aliceMessage = 'Hello world with image from Alice: ' + getRandomChars();
 	await alicePage.getByPlaceholder('Message').fill(aliceMessage);
-	await alicePage
-		.getByLabel('Upload image')
-		.setInputFiles('e2e/fixtures/image.png');
+	await alicePage.getByLabel('Upload image').setInputFiles('e2e/fixtures/image.png');
 	await alicePage.getByRole('button', { name: 'Send' }).click();
 
 	// ...Bob sees it
-	const aliceMessageSection = bobPage
-		.getByRole('region')
-		.filter({ hasText: aliceMessage });
+	const aliceMessageSection = bobPage.getByRole('region').filter({ hasText: aliceMessage });
 	expect(await aliceMessageSection.locator('img').screenshot()).toMatchSnapshot(
 		'user-message-image.png',
-		{ threshold: 0.5 },
+		{ threshold: 0.5 }
 	);
 
 	// when Bob sends a message...
 	const bobMessage = 'Hello world with image from Bob: ' + getRandomChars();
 	await bobPage.getByPlaceholder('Message').fill(bobMessage);
-	await bobPage
-		.getByLabel('Upload image')
-		.setInputFiles('e2e/fixtures/image.png');
+	await bobPage.getByLabel('Upload image').setInputFiles('e2e/fixtures/image.png');
 	await bobPage.getByRole('button', { name: 'Send' }).click();
 
 	// ...Alice sees it
-	const bobMessageSection = alicePage
-		.getByRole('region')
-		.filter({ hasText: bobMessage });
+	const bobMessageSection = alicePage.getByRole('region').filter({ hasText: bobMessage });
 	expect(await bobMessageSection.locator('img').screenshot()).toMatchSnapshot(
 		'user-message-image.png',
-		{ threshold: 0.5 },
+		{ threshold: 0.5 }
 	);
 	// delete Bob
 	await bobPage.close();
