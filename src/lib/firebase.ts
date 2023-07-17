@@ -9,7 +9,8 @@ import {
 	PUBLIC_FIREBASE_STORAGE_BUCKET,
 	PUBLIC_FIREBASE_APP_ID,
 	PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-	PUBLIC_FIREBASE_MEASUREMENT_ID
+	PUBLIC_FIREBASE_MEASUREMENT_ID,
+	PUBLIC_EMULATOR,
 } from '$env/static/public';
 
 const firebaseConfig = {
@@ -25,7 +26,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 export const auth = firebase.auth();
-const USE_EMULATOR = true; // TODO
+const USE_EMULATOR = PUBLIC_EMULATOR === 'true';
 if (USE_EMULATOR) {
 	connectAuthEmulator(auth, 'http://127.0.0.1:9099', {
 		disableWarnings: true
@@ -33,7 +34,7 @@ if (USE_EMULATOR) {
 }
 
 export const db = firebase.firestore();
-const USE_EMULATOR_FIRESTORE = true; // TODO
+const USE_EMULATOR_FIRESTORE = USE_EMULATOR;
 if (USE_EMULATOR_FIRESTORE) {
 	db.useEmulator('localhost', 8080);
 }
@@ -41,7 +42,7 @@ db.enablePersistence({ synchronizeTabs: true }).catch(console.error);
 
 import 'firebase/compat/storage';
 export const storage = firebase.storage();
-const USE_EMULATOR_STORAGE = true; // TODO
+const USE_EMULATOR_STORAGE = USE_EMULATOR;
 if (USE_EMULATOR_STORAGE) {
 	storage.useEmulator('localhost', 9199);
 }
